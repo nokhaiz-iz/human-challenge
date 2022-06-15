@@ -1,16 +1,15 @@
-import { Entity, Column, Index } from "typeorm";
-import Model from "./model.entity";
+import { Entity, Column, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
-export class User extends Model {
-  @Column()
-  name: string;
+export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-  @Index("email_index")
+  @Index("username_index")
   @Column({
     unique: true,
   })
-  email: string;
+  username: string;
 
   @Column()
   password: string;

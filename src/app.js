@@ -37,88 +37,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
-var typeorm_1 = require("typeorm");
-var user_entity_1 = require("./entity/user.entity");
+var jsonwebtoken_1 = require("jsonwebtoken");
+require("reflect-metadata");
+var data_source_1 = require("./data-source");
 // create typeorm connection
-(0, typeorm_1.createConnection)().then(function (connection) {
-    var userRepository = connection.getRepository(user_entity_1.User);
-    // create and setup express app
-    var app = express();
-    app.use(express.json());
-    // register routes
-    app.get("/users", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users;
+data_source_1.AppDataSource.initialize().then(function () { return __awaiter(void 0, void 0, void 0, function () {
+    var app, createToken;
+    return __generator(this, function (_a) {
+        app = express();
+        app.use(express.json());
+        createToken = function (body) { return __awaiter(void 0, void 0, void 0, function () {
+            var token, userVerify;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.find()];
+                    case 0: return [4 /*yield*/, jsonwebtoken_1.jwt.sign(body, "secrethaiufhbaywegfbwefgwebbcwuicbce", {
+                            expiresIn: "1h",
+                        })];
                     case 1:
-                        users = _a.sent();
-                        res.json(users);
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-    app.get("/users/:id", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.findOne(req.params.id)];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
-                }
-            });
-        });
-    });
-    app.post("/users", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user, results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.create(req.body)];
-                    case 1:
-                        user = _a.sent();
-                        return [4 /*yield*/, userRepository.save(user)];
+                        token = _a.sent();
+                        return [4 /*yield*/, jsonwebtoken_1.jwt.verify(token, "secrethaiufhbaywegfbwefgwebbcwuicbce")];
                     case 2:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
+                        userVerify = _a.sent();
+                        return [2 /*return*/, token];
                 }
             });
-        });
-    });
-    app.put("/users/:id", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user, results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.findOne(req.params.id)];
-                    case 1:
-                        user = _a.sent();
-                        userRepository.merge(user, req.body);
-                        return [4 /*yield*/, userRepository.save(user)];
-                    case 2:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
-                }
+        }); };
+        // register routes
+        app.post("/login", createToken, function (req, res) {
+            return __awaiter(this, void 0, void 0, function () {
+                var body, signBody;
+                return __generator(this, function (_a) {
+                    body = req.body;
+                    signBody = createToken(body);
+                    res.status(200).send(signBody);
+                    return [2 /*return*/];
+                });
             });
         });
-    });
-    app.delete("/users/:id", function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var results;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, userRepository.delete(req.params.id)];
-                    case 1:
-                        results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
-                }
+        app.all("*", function (req, res) {
+            return __awaiter(this, void 0, void 0, function () {
+                var fullUrl;
+                return __generator(this, function (_a) {
+                    fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+                    return [2 /*return*/, res.status(404).send(fullUrl)];
+                });
             });
         });
+        // start express server
+        app.listen(3000);
+        return [2 /*return*/];
     });
-    // start express server
-    app.listen(3000);
-});
+}); });

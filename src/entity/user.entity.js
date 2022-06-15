@@ -1,19 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -37,26 +22,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 var typeorm_1 = require("typeorm");
-var model_entity_1 = require("./model.entity");
-var User = /** @class */ (function (_super) {
-    __extends(User, _super);
+var User = /** @class */ (function () {
     function User() {
-        return _super !== null && _super.apply(this, arguments) || this;
     }
     User.prototype.toJSON = function () {
         return __assign(__assign({}, this), { password: undefined });
     };
     __decorate([
-        (0, typeorm_1.Column)(),
+        (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
         __metadata("design:type", String)
-    ], User.prototype, "name", void 0);
+    ], User.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Index)("email_index"),
+        (0, typeorm_1.Index)("username_index"),
         (0, typeorm_1.Column)({
             unique: true,
         }),
         __metadata("design:type", String)
-    ], User.prototype, "email", void 0);
+    ], User.prototype, "username", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
@@ -65,5 +47,5 @@ var User = /** @class */ (function (_super) {
         (0, typeorm_1.Entity)("users")
     ], User);
     return User;
-}(model_entity_1.default));
+}());
 exports.User = User;
