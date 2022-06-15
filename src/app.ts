@@ -68,6 +68,12 @@ AppDataSource.initialize().then(async () => {
     });
   });
 
+  // UNHANDLED 404 ROUTE
+  app.all("*", async function (req: Request, res: Response) {
+    const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+    return res.status(404).send(`Route ${fullUrl} not found`);
+  });
+
   //USER Routes
   // register routes
   app.post("/login", createToken, async function (req: Request, res: Response) {
