@@ -6,6 +6,7 @@ import { jwt } from "jsonwebtoken";
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 import { User } from "./entity/user.entity";
+import { LessThan } from "typeorm";
 
 // create typeorm connection
 AppDataSource.initialize().then(async () => {
@@ -72,6 +73,19 @@ AppDataSource.initialize().then(async () => {
   app.all("*", async function (req: Request, res: Response) {
     const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
     return res.status(404).send(`Route ${fullUrl} not found`);
+  });
+
+  //Find Published Article Endpoint
+  app.get("/api/articles/published", async (req, res) => {
+    const article = await AppDataSource.getRepository(User)
+      .createQueryBuilder("article")
+      .where("pubished_at", LessThan(new Date().toLocaleString()))
+      .getOne();
+
+    res.json({
+      message: "success",
+      payload: article,
+    });
   });
 
   //USER Routes
