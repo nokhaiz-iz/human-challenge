@@ -1,4 +1,5 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn } from "typeorm";
+import { Matches } from "class-validator";
 
 @Entity("articles")
 export class Article {
@@ -12,6 +13,7 @@ export class Article {
   title: string;
 
   @Index("slug_index")
+  @Matches("/^[0-9A-Za-z-]+$/")
   @Column({
     unique: true,
   })
