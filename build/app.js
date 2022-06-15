@@ -81,6 +81,7 @@ data_source_1.AppDataSource.initialize().then(function () { return __awaiter(voi
                 });
             });
         });
+<<<<<<< HEAD
         app.all("*", function (req, res) {
             return __awaiter(this, void 0, void 0, function () {
                 var fullUrl;
@@ -90,6 +91,8 @@ data_source_1.AppDataSource.initialize().then(function () { return __awaiter(voi
                 });
             });
         });
+=======
+>>>>>>> 0707278 (jwt)
         // start express server
         app.listen(3000);
         return [2 /*return*/];
