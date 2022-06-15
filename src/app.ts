@@ -7,6 +7,7 @@ import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 import { User } from "./entity/user.entity";
 import { LessThan } from "typeorm";
+import { Article } from "./entity/article.entity";
 
 // create typeorm connection
 AppDataSource.initialize().then(async () => {
@@ -35,8 +36,10 @@ AppDataSource.initialize().then(async () => {
   app.post("/api/article", async (req, res) => {
     await AppDataSource.createQueryBuilder()
       .insert()
-      .into(User)
-      .values([{ username: req.body.username, password: req.body.password }])
+      .into(Article)
+      .values([
+        { title: req.body.title, slug: req.body.slug, published_at: null },
+      ])
       .execute();
     res.json({
       message: req.body,
@@ -89,12 +92,28 @@ AppDataSource.initialize().then(async () => {
   });
 
   //USER Routes
-  // register routes
-  app.post("/login", createToken, async function (req: Request, res: Response) {
-    const body = req.body;
-    const signBody = createToken(body);
-    res.status(200).send(signBody);
+  //Create User
+  app.post("/api/user", async (req, res) => {
+    await AppDataSource.createQueryBuilder()
+      .insert()
+      .into(User)
+      .values([{ username: req.body.username, password: req.body.password }])
+      .execute();
+    res.json({
+      message: req.body,
+    });
   });
+
+  // Login API
+  app.post(
+    "/api/login",
+    createToken,
+    async function (req: Request, res: Response) {
+      const body = req.body;
+      const signBody = createToken(body);
+      res.status(200).send(signBody);
+    }
+  );
 
   // start express server
   app.listen(3000);
