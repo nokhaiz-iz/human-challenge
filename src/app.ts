@@ -1,5 +1,4 @@
 import * as express from "express";
-import { Router } from "express";
 import * as bodyParser from "body-parser";
 import { Request, Response } from "express";
 import { jwt } from "jsonwebtoken";
@@ -19,10 +18,7 @@ AppDataSource.initialize().then(async () => {
     const token = await jwt.sign(body, "secrethaiufhbaywegfbwefgwebbcwuicbce", {
       expiresIn: "1h",
     });
-    const userVerify = await jwt.verify(
-      token,
-      "secrethaiufhbaywegfbwefgwebbcwuicbce"
-    );
+    await jwt.verify(token, "secrethaiufhbaywegfbwefgwebbcwuicbce");
     return token;
   };
   app.use(express.json());
